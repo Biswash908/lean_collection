@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lean Connect Test</title>
+  
+  <!-- Lean SDK (Make sure it's loaded properly!) -->
+  <script src="https://cdn.leantech.me/link/loader/prod/ae/latest/lean-link-loader.min.js"></script>
+</head>
+<body>
+  <button onclick="startLean()">Connect Bank</button>
+
+  <script>
+    function startLean() {
+      // Check if Lean is defined first
+      if (typeof Lean !== 'undefined') {
+        // Now initiate the connection
+        Lean.connect({
+          app_token: "4595889f-d4ab-492d-9e79-eea3298a3a4f", // Application ID from Lean dashboard
+          access_token: "eyJraWQiOiJhNDNhMjFlOS0zNWVhLTRlOTQtOGZhMC1hNDQ5YTg1MjM4MmMiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI0NTk1ODg5Zi1kNGFiLTQ5MmQtOWU3OS1lZWEzMjk4YTNhNGYiLCJhdWQiOiI0NTk1ODg5Zi1kNGFiLTQ5MmQtOWU3OS1lZWEzMjk4YTNhNGYiLCJuYmYiOjE3NDU5NDU3MTAsInNjb3BlIjpbImN1c3RvbWVyLnJlYWQiLCJiZW5lZmljaWFyeS53cml0ZSIsInBheW1lbnQud3JpdGUiLCJwYXltZW50LnJlYWQiLCJkZXN0aW5hdGlvbi5yZWFkIiwiY29ubmVjdC53cml0ZSIsImNvbm5lY3QucmVhZCIsImFwcGxpY2F0aW9uLnJlYWQiLCJiYW5rLnJlYWQiLCJrZXkucmVhZCJdLCJpc3MiOiJodHRwczovL2F1dGguc2FuZGJveC5sZWFudGVjaC5tZSIsImN1c3RvbWVycyI6W3siaWQiOiIyNzUxNjRiZC0xMTFiLTQyZDQtYjUzNC05NTEyN2JhMGEwZGEifV0sImV4cCI6MTc0NTk0OTMxMCwiaWF0IjoxNzQ1OTQ1NzEwLCJqdGkiOiI3M2Y0NmYxNi02NTJlLTRmMDEtOTE1Yi05YTdkNjBjNzA4MDYiLCJhcHBsaWNhdGlvbnMiOlt7ImlkIjoiNDU5NTg4OWYtZDRhYi00OTJkLTllNzktZWVhMzI5OGEzYTRmIn1dfQ.idi1WnHRWCnJWOT4cu1K_vQW9l4vgm4An084vpndWNyqjDNexur_psevPqb80SRJNgp4AErFoICQ4dJuMFztzw5v6TcviwP7heXPRbEWN6bEcptlrWBlSzuhmcnHwarCoT_HQwhh7cI2bub9k3HD4tPgn7vkKx_w281DB9-nWVgRKpl73whOHb9HvASHSv9vLRnJDaJrVIA-DjArHBRParonYXCNHGGis5vkYjFAnO6YiMIhe4xJ8XSRO2OljZN__98aDeb2YodXpnJn6fLXuTe45Q_l0Th-JafhQLFcwZuVpGycd31XG6nQFVgJPWLUs84gUtiQAu-zdtMkNfwX7A", // Your Access Token
+          customer_id: "275164bd-111b-42d4-b534-95127ba0a0da", // Customer ID from your "Create Customer" API response
+          permissions: ["identity", "accounts", "transactions"], // Permissions
+          bank_identifier: "ENBD_UAE", // Optional: If you want to preselect a bank
+          sandbox: true,
+          callback: function (event) {
+            console.log('Lean event:', event);
+          },
+          error: function (err) {
+            console.error('Lean error:', err);
+          },
+          close: function () {
+            console.log('Lean widget closed');
+          }
+        });
+      } else {
+        console.error('Lean SDK is not loaded!');
+      }
+    }
+  </script>
+</body>
+</html>

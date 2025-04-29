@@ -1,0 +1,596 @@
+{
+	"info": {
+		"_postman_id": "62d94c01-338c-4ff5-b92e-ca8468f31c36",
+		"name": "Lean Mockbank",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "35035966"
+	},
+	"item": [
+		{
+			"name": "Get Access Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();\r",
+							"if (response.access_token) {\r",
+							"    pm.collectionVariables.set(\"access_token\", response.access_token);\r",
+							"    // Log confirmation in the Postman console\r",
+							"    console.log(\"Access token saved to collection variable.\");\r",
+							"} else {\r",
+							"    // If no access token is found in the response, show an error in console\r",
+							"    console.error(\"Failed to get access token.\");\r",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "client_id",
+							"value": "{{clientId}}",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "{{clientSecret}}",
+							"type": "text"
+						},
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "api",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://auth.sandbox.leantech.me/oauth2/token",
+					"protocol": "https",
+					"host": [
+						"auth",
+						"sandbox",
+						"leantech",
+						"me"
+					],
+					"path": [
+						"oauth2",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Customer",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Generate a 12-character alphanumeric string\r",
+							"const id = Array(12)\r",
+							"  .fill()\r",
+							"  .map(() => Math.random().toString(36).charAt(2))\r",
+							"  .join('');\r",
+							"\r",
+							"pm.variables.set(\"app_user_id\", id);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();\r",
+							"if (response.access_token) {\r",
+							"    pm.collectionVariables.set(\"customer_id\", response.customer_id);\r",
+							"    // Log confirmation in the Postman console\r",
+							"    console.log(\"Customer id saved to collection variable.\");\r",
+							"} else {\r",
+							"    // If no access token is found in the response, show an error in console\r",
+							"    console.error(\"Failed to get customer id.\");\r",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"app_user_id\": \"{{app_user_id}}\",\r\n  \"name\": \"{{$randomNamePrefix}}\",\r\n  \"email\": \"{{$randomExampleEmail}}\",\r\n  \"phone\": \"{{$randomPhoneNumber}}\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sandbox.leantech.me/customers/v1/",
+					"protocol": "https",
+					"host": [
+						"sandbox",
+						"leantech",
+						"me"
+					],
+					"path": [
+						"customers",
+						"v1",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all customers",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://sandbox.leantech.me/customers/v1/",
+					"protocol": "https",
+					"host": [
+						"sandbox",
+						"leantech",
+						"me"
+					],
+					"path": [
+						"customers",
+						"v1",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Generate Customer-Scoped Access Token",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "client_id",
+							"value": "{{clientId}}",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "{{clientSecret}}",
+							"type": "text"
+						},
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "customer.{{customer_id}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://auth.sandbox.leantech.me/oauth2/token",
+					"protocol": "https",
+					"host": [
+						"auth",
+						"sandbox",
+						"leantech",
+						"me"
+					],
+					"path": [
+						"oauth2",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Initiate a Customer Connection via Link SDK",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "client_id",
+							"value": "{{clientId}}",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "{{clientSecret}}",
+							"type": "text"
+						},
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "api",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://sandbox.leantech.me/links",
+					"protocol": "https",
+					"host": [
+						"sandbox",
+						"leantech",
+						"me"
+					],
+					"path": [
+						"links"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get customer access token",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "client_id",
+							"value": "4595889f-d4ab-492d-9e79-eea3298a3a4f",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "34353935383839662d643461622d3439",
+							"type": "text"
+						},
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "customer.600505d9-27bd-4078-9dae-f7ac5cd0b32f",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://auth.sandbox.leantech.me/oauth2/token",
+					"protocol": "https",
+					"host": [
+						"auth",
+						"sandbox",
+						"leantech",
+						"me"
+					],
+					"path": [
+						"oauth2",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch Identity",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{access_token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"entity_id\": \"03c57689-a176-4c2d-91db-d90ed7b12c0a\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sandbox.leantech.me/data/v1/identity",
+					"protocol": "https",
+					"host": [
+						"sandbox",
+						"leantech",
+						"me"
+					],
+					"path": [
+						"data",
+						"v1",
+						"identity"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch Account",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{access_token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"entity_id\": \"03c57689-a176-4c2d-91db-d90ed7b12c0a\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sandbox.leantech.me/data/v1/accounts",
+					"protocol": "https",
+					"host": [
+						"sandbox",
+						"leantech",
+						"me"
+					],
+					"path": [
+						"data",
+						"v1",
+						"accounts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch Balance",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"entity_id\": \"181725a6-21d0-4ac0-ab51-1ca4410f5167\",\r\n  \"account_id\": \"29906d53-4407-47b1-a21c-5cad9c6027f5\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sandbox.leantech.me/data/v1/balance",
+					"protocol": "https",
+					"host": [
+						"sandbox",
+						"leantech",
+						"me"
+					],
+					"path": [
+						"data",
+						"v1",
+						"balance"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch all Destinations",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{access_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sandbox.leantech.me/payments/v1/destinations",
+					"protocol": "https",
+					"host": [
+						"sandbox",
+						"leantech",
+						"me"
+					],
+					"path": [
+						"payments",
+						"v1",
+						"destinations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch Accounts",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{JWT}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "scope",
+						"value": "api",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"entity_id\": \"03c57689-a176-4c2d-91db-d90ed7b12c0a\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sandbox.leantech.me/data/v1/accounts",
+					"protocol": "https",
+					"host": [
+						"sandbox",
+						"leantech",
+						"me"
+					],
+					"path": [
+						"data",
+						"v1",
+						"accounts"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "customer_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "clientId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "clientSecret",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "access_token",
+			"value": ""
+		},
+		{
+			"key": "entity_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "JWT",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
