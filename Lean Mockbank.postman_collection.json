@@ -333,7 +333,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "{{access_token}}",
+						"value": "Bearer {{access_token}}",
 						"type": "text"
 					},
 					{
@@ -375,7 +375,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "{{access_token}}",
+						"value": "Bearer {{access_token}}",
 						"type": "text"
 					},
 					{
@@ -493,13 +493,13 @@
 			"response": []
 		},
 		{
-			"name": "Fetch Accounts",
+			"name": "Fetch Transactions",
 			"request": {
 				"method": "POST",
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer {{JWT}}",
+						"value": "Bearer {{access_token}}",
 						"type": "text"
 					},
 					{
@@ -515,7 +515,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"entity_id\": \"03c57689-a176-4c2d-91db-d90ed7b12c0a\"\r\n}\r\n",
+					"raw": "{\r\n  \"entity_id\": \"03c57689-a176-4c2d-91db-d90ed7b12c0a\",\r\n  \"account_id\": \"803fa98d-5765-43e4-ad9f-2732fb8a287c\"\r\n}\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -523,7 +523,7 @@
 					}
 				},
 				"url": {
-					"raw": "https://sandbox.leantech.me/data/v1/accounts",
+					"raw": "https://sandbox.leantech.me/data/v1/transactions",
 					"protocol": "https",
 					"host": [
 						"sandbox",
@@ -533,7 +533,7 @@
 					"path": [
 						"data",
 						"v1",
-						"accounts"
+						"transactions"
 					]
 				}
 			},
